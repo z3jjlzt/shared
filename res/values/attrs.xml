@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RandomInt">
+        <attr name="myInt" format="string" />
+        <attr name="myBgColor" format="color" />
+        <attr name="myTextColor" format="color" />
+        <attr name="myTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="Myv">
+        <attr name="mytitleText" format="string" />
+        <attr name="mytitleTextColor" format="color" />
+        <attr name="mytitleTextSize" format="dimension" />
+        <attr name="mytitleTextBg" format="color" />
+    </declare-styleable>
+
+</resources>
