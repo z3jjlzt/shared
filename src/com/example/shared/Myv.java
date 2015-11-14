@@ -22,7 +22,7 @@ public class Myv extends View {
 	private int b;
 
 	private Rect mrect;
-	private Paint mpaint; 
+	private Paint mpaint; //sb
 
 	public Myv(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
