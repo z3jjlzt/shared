@@ -23,13 +23,13 @@ public class Myvg extends ViewGroup {
 
 	public Myvg(Context context) {
 		super(context);
-		// addview();
+		// addview();svsfdsd
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public int getChildCount() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubssss
 		return super.getChildCount();
 	}
 
