@@ -21,7 +21,7 @@ public class RandomInt extends View {
 	private int mTextSize;
 
 	private Rect mBound;
-	private Paint mPaint;//changed ssss bbb
+	private Paint mPaint;
 	private int radius;
 
 	public RandomInt(Context context, AttributeSet attrs, int defStyleAttr) {
