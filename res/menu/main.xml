@@ -3,12 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.shared.MainActivity" >
 
- <item
-        android:id="@+id/action_search"
-        android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/actionbar_search_icon"
-        app:showAsAction="ifRoom"
-        android:title="@string/action_search"/>
+
    
  
 
