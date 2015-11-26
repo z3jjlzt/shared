@@ -8,19 +8,22 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
+import com.example.shared.MyListview.OnReflashListener;
+import com.example.shared.MyListview.onItemDeletedListener;
 import com.z3jjlzt.utils.MyBaseAdapter;
 import com.z3jjlzt.utils.ViewHolder;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 public class MainActivity extends Activity {
 
-	private ListView lv;
+	private MyListview lv;
 	ArrayList<String> list;
 	private MyBaseAdapter adapter;
 	private BitmapCache bitmapCache;
@@ -30,7 +33,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		lv =(ListView) findViewById(R.id.lv);
+		lv =(MyListview) findViewById(R.id.lv);
 		list = new ArrayList<String>();
 		String[] images = new String[] {
 				"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
@@ -150,14 +153,39 @@ public class MainActivity extends Activity {
 			}
 		};
 		lv.setAdapter(adapter);
-//		lv.setOnItemDeleteListener(new onItemDeletedListener() {
-//
-//			@Override
-//			public void onItemDelete(int pos) {
-//				list.remove(pos);
-//				adapter.notifyDataSetChanged();
-//			}
-//		});
+		lv.setOnItemDeleteListener(new onItemDeletedListener() {
+
+			@Override
+			public void onItemDelete(int pos) {
+				list.remove(pos);
+				adapter.notifyDataSetChanged();
+			}
+		});
+		lv.setOnRefreshListener(new OnReflashListener() {
+			
+			@Override
+			public void OnReflash() {
+				new AsyncTask<String, Integer, String>() {
+
+					@Override
+					protected String doInBackground(String... params) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return null;
+					}
+					@Override
+					protected void onPostExecute(String result) {
+						lv.onReflashCompleted();
+						Log.e("sb", "done");
+						super.onPostExecute(result);
+					}
+				}.execute();
+			}
+		});
 		
 		
 
