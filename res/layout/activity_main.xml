@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.example.shared.MyListview
+    <com.example.shared.utils.MyListview
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+    </com.example.shared.utils.MyListview>
 
-    </com.example.shared.MyListview>
+
 
 </RelativeLayout>

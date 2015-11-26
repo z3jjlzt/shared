@@ -1,4 +1,4 @@
-package com.example.shared;
+package com.example.shared.utils;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,10 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.example.shared.R;
+import com.example.shared.R.drawable;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 import com.android.volley.toolbox.Volley;
 
 import android.content.Context;

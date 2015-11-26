@@ -3,10 +3,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.example.shared.MyListview
-        android:id="@+id/lv"
+    <com.example.shared.utils.MyListview
+        android:id="@+id/lv" 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-    </com.example.shared.MyListview>
+    </com.example.shared.utils.MyListview>
 
 </RelativeLayout>

@@ -7,9 +7,13 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.example.shared.utils.EventInject;
+import com.example.shared.utils.LztViewInject;
+import com.example.shared.utils.MyListview;
+import com.example.shared.utils.MyListview.OnReflashListener;
+import com.example.shared.utils.MyListview.onItemDeletedListener;
+import com.example.shared.utils.ViewInjectUtils;
 import com.android.volley.toolbox.Volley;
-import com.example.shared.MyListview.OnReflashListener;
-import com.example.shared.MyListview.onItemDeletedListener;
 import com.z3jjlzt.utils.MyBaseAdapter;
 import com.z3jjlzt.utils.ViewHolder;
 
@@ -19,10 +23,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.util.LruCache;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
+	@LztViewInject(R.id.lv)
 	private MyListview lv;
 	ArrayList<String> list;
 	private MyBaseAdapter adapter;
@@ -33,10 +40,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		lv =(MyListview) findViewById(R.id.lv);
+		ViewInjectUtils.inject(this);
 		list = new ArrayList<String>();
-		String[] images = new String[] {
-				"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
+		String[] images = new String[] { "http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406383291_8239.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406383290_9329.jpg",
@@ -120,13 +126,10 @@ public class MainActivity extends Activity {
 				"http://img.my.csdn.net/uploads/201407/26/1406382767_4772.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406382766_4924.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406382766_5762.jpg",
-				"http://img.my.csdn.net/uploads/201407/26/1406382765_7341.jpg"};
+				"http://img.my.csdn.net/uploads/201407/26/1406382765_7341.jpg" };
 
-	
-	
-			
-		for(int i=0;i<4;i++){
-			//list.add(images[i]);
+		for (int i = 0; i < 4; i++) {
+			// list.add(images[i]);
 			list.add(
 					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fimg2.kwcdn.kuwo.cn%2Fstar%2FKuwoArtPic%2F2013%2F22%2F1396932137246_w.jpg&thumburl=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D4064024103%2C65869690%26fm%3D21%26gp%3D0.jpg");
 			list.add(
@@ -137,19 +140,22 @@ public class MainActivity extends Activity {
 					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F5d6034a85edf8db1fa3020bb0d23dd54574e74d6.jpg&thumburl=http%3A%2F%2Fb.hiphotos.baidu.com%2Fimage%2Fh%253D200%2Fsign%3D211b3aacfff2b211fb2e824efa816511%2F5d6034a85edf8db1fa3020bb0d23dd54574e74d6.jpg");
 			list.add(
 					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F5fdf8db1cb1349543ab7b4bb524e9258d0094a47.jpg&thumburl=http%3A%2F%2Fd.hiphotos.baidu.com%2Fimage%2Fh%253D200%2Fsign%3Dc866dbfe9713b07ea2bd57083cd69113%2F5fdf8db1cb1349543ab7b4bb524e9258d0094a47.jpg");
-	list.add("http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg&thumburl=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fh%253D200%2Fsign%3Dc57dfee5344e251ffdf7e3f89787c9c2%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg");
+			list.add(
+					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg&thumburl=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fh%253D200%2Fsign%3Dc57dfee5344e251ffdf7e3f89787c9c2%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg");
 		}
 		bitmapCache = new BitmapCache();
 		mImageLoader = new ImageLoader(Volley.newRequestQueue(this), bitmapCache);
 		adapter = new MyBaseAdapter<String>(this, list, R.layout.volleyimageview) {
 
 			@Override
-			public void convert(ViewHolder vh, String t,int position) {
-				vh.setText(R.id.textview, "aaa"+position);
+			public void convert(ViewHolder vh, String t, int position) {
+				vh.setText(R.id.textview, "aaa" + position);
 				ImageView networkImageView = vh.getView(R.id.imageview);
 				networkImageView.setTag(t);
-				ImageListener listerer = ImageLoader.getImageListener(networkImageView, R.drawable.ic_launcher, R.drawable.ic_launcher);
-				mImageLoader.get(t, getImageListener(networkImageView, R.drawable.ic_launcher, R.drawable.ic_launcher, t));
+				ImageListener listerer = ImageLoader.getImageListener(networkImageView, R.drawable.ic_launcher,
+						R.drawable.ic_launcher);
+				mImageLoader.get(t,
+						getImageListener(networkImageView, R.drawable.ic_launcher, R.drawable.ic_launcher, t));
 			}
 		};
 		lv.setAdapter(adapter);
@@ -162,7 +168,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		lv.setOnRefreshListener(new OnReflashListener() {
-			
+
 			@Override
 			public void OnReflash() {
 				new AsyncTask<String, Integer, String>() {
@@ -177,6 +183,7 @@ public class MainActivity extends Activity {
 						}
 						return null;
 					}
+
 					@Override
 					protected void onPostExecute(String result) {
 						lv.onReflashCompleted();
@@ -186,46 +193,43 @@ public class MainActivity extends Activity {
 				}.execute();
 			}
 		});
-		
-		
 
 	}
-	 /**
-	  * 避免图片错位
+
+	/**
+	 * 避免图片错位
+	 * 
 	 * @param view
 	 * @param defaultImageResId
 	 * @param errorImageResId
 	 * @param url
 	 * @return
 	 */
-	public static ImageListener getImageListener(
-	            final ImageView view,
-	            final int defaultImageResId,
-	            final int errorImageResId,
-	            final String url) {
-	        return new ImageListener() {
-	            @Override
-	            public void onErrorResponse(VolleyError error) {
-	                if (errorImageResId != 0) {
-	                    view.setImageResource(errorImageResId);
-	                }
-	            }
+	public static ImageListener getImageListener(final ImageView view, final int defaultImageResId,
+			final int errorImageResId, final String url) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				if (errorImageResId != 0) {
+					view.setImageResource(errorImageResId);
+				}
+			}
 
-	            @Override
-	            public void onResponse(ImageContainer response, boolean isImmediate) {
-	                if (response.getBitmap() != null) {
-	                    //在这里可以设置，如果想得到圆角图片的画，可以对bitmap进行加工，可以给imageview加一个
-	                    //额外的参数
-	                    String urlTag = (String) view.getTag();
-	                    if(urlTag!=null && urlTag.trim().equals(url)){
-	                        view.setImageBitmap(response.getBitmap());
-	                    }
-	                } else if (defaultImageResId != 0) {
-	                    view.setImageResource(defaultImageResId);
-	                }
-	            }
-	        };
-	    }
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					// 在这里可以设置，如果想得到圆角图片的画，可以对bitmap进行加工，可以给imageview加一个
+					// 额外的参数
+					String urlTag = (String) view.getTag();
+					if (urlTag != null && urlTag.trim().equals(url)) {
+						view.setImageBitmap(response.getBitmap());
+					}
+				} else if (defaultImageResId != 0) {
+					view.setImageResource(defaultImageResId);
+				}
+			}
+		};
+	}
 
 	class BitmapCache implements ImageCache {
 		private LruCache<String, Bitmap> lruCache;
@@ -248,7 +252,6 @@ public class MainActivity extends Activity {
 		public void putBitmap(String url, Bitmap bitmap) {
 			lruCache.put(url, bitmap);
 		}
-		
 
 	}
 

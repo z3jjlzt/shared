@@ -14,8 +14,10 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
-import com.example.shared.DiskLruCache.Snapshot;
-import com.example.shared.MyListview.onItemDeletedListener;
+import com.example.shared.utils.DiskLruCache;
+import com.example.shared.utils.MyListview;
+import com.example.shared.utils.DiskLruCache.Snapshot;
+import com.example.shared.utils.MyListview.onItemDeletedListener;
 import com.z3jjlzt.utils.MyBaseAdapter;
 import com.z3jjlzt.utils.ViewHolder;
 

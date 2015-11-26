@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.shared;
+package com.example.shared.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

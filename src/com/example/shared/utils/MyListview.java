@@ -1,6 +1,11 @@
-package com.example.shared;
+package com.example.shared.utils;
 
 import java.util.Date;
+
+import com.example.shared.R;
+import com.example.shared.R.anim;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
