@@ -1,4 +1,8 @@
-package com.example.shared;
+package com.example.shared.test;
+
+import com.example.shared.R;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

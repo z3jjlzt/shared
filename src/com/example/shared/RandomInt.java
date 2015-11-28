@@ -24,6 +24,12 @@ public class RandomInt extends View {
 	private Paint mPaint;
 	private int radius;
 
+	/**
+	 * @param context
+	 * @param attrs
+	 * @param defStyleAttr
+	 * ×Ô¶¨ÒåVIEW
+	 */
 	public RandomInt(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.RandomInt, defStyleAttr, 0);

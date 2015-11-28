@@ -1,10 +1,11 @@
-package com.example.shared;
+package com.example.shared.test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.example.shared.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,11 +15,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Audio.Media;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 
+
+/**
+ * @author z3jjlzt
+ *2015年11月26日
+ *照片贮存在自定义位置 直接取出 避免图片不清晰
+ */
 public class CameraTest extends Activity {
 	private String path = Environment.getExternalStorageDirectory() + "/";
 
@@ -40,7 +44,6 @@ public class CameraTest extends Activity {
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode==1){
 			FileInputStream fis= null;
