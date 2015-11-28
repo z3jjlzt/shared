@@ -1,4 +1,4 @@
-package com.example.shared;
+package com.example.shared.test;
 
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;

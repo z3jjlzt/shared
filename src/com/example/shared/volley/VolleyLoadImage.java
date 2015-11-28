@@ -1,4 +1,4 @@
-package com.example.shared;
+package com.example.shared.volley;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +14,13 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
-import com.example.shared.utils.DiskLruCache;
+import com.example.shared.R;
+import com.example.shared.R.drawable;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 import com.example.shared.utils.MyListview;
-import com.example.shared.utils.DiskLruCache.Snapshot;
 import com.example.shared.utils.MyListview.onItemDeletedListener;
+import com.example.shared.volley.DiskLruCache.Snapshot;
 import com.z3jjlzt.utils.MyBaseAdapter;
 import com.z3jjlzt.utils.ViewHolder;
 
