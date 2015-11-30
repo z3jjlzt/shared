@@ -118,7 +118,6 @@ public class RandomInt extends View {
 		}
 		radius = Math.max(fHeight, fWidth) / 2;
 		setMeasuredDimension(radius * 2, radius * 2);
-		Log.e("sb", "onmeasure");  
 	}
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -128,7 +127,6 @@ public class RandomInt extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		Log.e("sb", "onDraw");  
 		mPaint.setColor(mBgColor);
 		canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
 		mPaint.setColor(mTextColor);

@@ -16,4 +16,12 @@
          custom:myTextColor="#eee"
          custom:myTextSize="22sp" />
 
+     <com.example.shared.LeiDa
+         android:id="@+id/ld"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/randomInt1"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="50dp" />
+
 </RelativeLayout>
