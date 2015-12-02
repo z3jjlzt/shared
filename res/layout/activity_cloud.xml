@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:text="Button" />
+
+    <com.example.shared.CloudText
+        android:id="@+id/ct"
+        android:layout_width="match_parent"
+        android:layout_below="@id/button1"
+        android:layout_height="match_parent" >
+    </com.example.shared.CloudText>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/button1"
+        android:text="Button" />
+
+</RelativeLayout>

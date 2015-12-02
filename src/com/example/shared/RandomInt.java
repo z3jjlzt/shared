@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -92,7 +91,6 @@ public class RandomInt extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int fWidth;
 		int fHeight;
 		int wSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -121,7 +119,6 @@ public class RandomInt extends View {
 	}
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		// TODO Auto-generated method stub
 		super.onLayout(changed, left, top, right, bottom);
 	}
 
@@ -134,9 +131,7 @@ public class RandomInt extends View {
 	}
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		// TODO Auto-generated method stub
 		super.onSizeChanged(w, h, oldw, oldh);
-		 Log.e("sb", "onSizeChanged,w="+w+",h="+h+",oldw="+oldw+",oldh="+oldh);  
 	}
 
 }

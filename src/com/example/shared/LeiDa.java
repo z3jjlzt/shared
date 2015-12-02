@@ -18,7 +18,7 @@ public class LeiDa extends View {
 	 * 默认点
 	 */
 	@SuppressWarnings("unused")
-	private Bitmap pointDefault; 
+	private Bitmap pointDefault;
 	/**
 	 * 新发现的点
 	 */
@@ -63,6 +63,10 @@ public class LeiDa extends View {
 	 * 存放位置
 	 */
 	private ArrayList<pointBean> list = new ArrayList<pointBean>();
+	/**
+	 * 旋转速率
+	 */
+	private int rate = 3;
 
 	public LeiDa(Context context) {
 		super(context);
@@ -108,12 +112,11 @@ public class LeiDa extends View {
 		outRadius = Math.min(width, height) / 2;
 		inRadius = outRadius / 4;
 
-
 		int radius = Math.min(width, height);
 		mx = radius / 2;
 		my = radius / 2;
 		setMeasuredDimension(radius, radius);
-		if (outRadius > 0)// 必须加 不然报null错误 
+		if (outRadius > 0)// 必须加 不然报null错误
 			this.mScanBmp = Bitmap.createScaledBitmap(
 					BitmapFactory.decodeResource(getResources(), R.drawable.radar_scan_img), radius, radius, false);
 	}
@@ -124,12 +127,14 @@ public class LeiDa extends View {
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Style.FILL);
 		mPaint.setColor(0xffB8DCFC);
+		// 画4个圆
 		canvas.drawCircle(mx, my, outRadius, mPaint);
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setColor(0xff3278B4);
 		canvas.drawCircle(mx, my, inRadius * 3, mPaint);
 		canvas.drawCircle(mx, my, inRadius * 2, mPaint);
 		canvas.drawCircle(mx, my, inRadius * 1, mPaint);
+
 		double radianStart = Math.toRadians((double) 45);// 将角度转换为弧度
 		double radianEnd = Math.toRadians((double) 180);
 		for (int i = 0; i < 4; i++)// 画出对角线
@@ -142,7 +147,7 @@ public class LeiDa extends View {
 		if (isSearch) {
 			canvas.rotate(mOffsetArgs, mx, my);
 			canvas.drawBitmap(mScanBmp, mx - mScanBmp.getWidth() / 2, my - mScanBmp.getHeight() / 2, mPaint);
-			mOffsetArgs += 5;
+			mOffsetArgs += rate;
 			this.invalidate();
 		} else {
 			canvas.drawBitmap(mScanBmp, mx - mScanBmp.getWidth() / 2, my - mScanBmp.getHeight() / 2, mPaint);
@@ -179,6 +184,7 @@ public class LeiDa extends View {
 	 */
 	public void setSearching(boolean status) {
 		this.isSearch = status;
+		invalidate();
 	}
 
 	/**
@@ -197,6 +203,15 @@ public class LeiDa extends View {
 			}
 		}
 		return false;
+
+	}
+
+	/**
+	 * @param rate
+	 *            设置旋转速度
+	 */
+	public void setRate(int rate) {
+		this.rate = rate;
 
 	}
 

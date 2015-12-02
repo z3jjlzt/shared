@@ -17,5 +17,6 @@
     <string name="btn_del">删除</string>
     <string name="title_activity_camera_test">CameraTest</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_cloud">CloudActivity</string>
 
 </resources>
