@@ -18,5 +18,6 @@
     <string name="title_activity_camera_test">CameraTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_cloud">CloudActivity</string>
+    <string name="title_activity_recycleview">RecycleviewActivity</string>
 
 </resources>

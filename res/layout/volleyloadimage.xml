@@ -4,9 +4,14 @@
     android:layout_height="fill_parent" >
 
     <com.example.shared.utils.MyListview
-        android:id="@+id/lv" 
+        android:id="@+id/lv"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </com.example.shared.utils.MyListview>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

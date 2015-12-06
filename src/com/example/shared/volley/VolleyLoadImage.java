@@ -15,12 +15,19 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
 import com.example.shared.R;
-import com.example.shared.R.drawable;
-import com.example.shared.R.id;
-import com.example.shared.R.layout;
+import com.example.shared.utils.LztRecycleViewAdapter;
 import com.example.shared.utils.MyListview;
 import com.example.shared.utils.MyListview.onItemDeletedListener;
 import com.example.shared.volley.DiskLruCache.Snapshot;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.z3jjlzt.utils.MyBaseAdapter;
 import com.z3jjlzt.utils.ViewHolder;
 
@@ -34,8 +41,17 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * @author z3jjlzt 图片的ITEM要设置宽高 不然不显示。。
@@ -45,7 +61,8 @@ public class VolleyLoadImage extends Activity {
 	/**
 	 * 列表
 	 */
-	private MyListview lv;
+	@Bind(R.id.lv)
+	MyListview lv;
 	/**
 	 * 数据源
 	 */
@@ -67,29 +84,112 @@ public class VolleyLoadImage extends Activity {
 	 * MD5辅助类
 	 */
 	private MD5Utils mD5Utils = new MD5Utils();
+	private boolean f1;
+
+	@Bind(R.id.list)
+	RecyclerView recyclerView;
+
+	com.nostra13.universalimageloader.core.ImageLoader imageloader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.volleyloadimage);
-		initView();
+		ButterKnife.bind(this);
 		setData();
 		bitmapCache = new BitmapCache();
+		
 		mImageLoader = new ImageLoader(Volley.newRequestQueue(this), bitmapCache);
+		imageloader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
+		// imageloader.init(ImageLoaderConfiguration.createDefault(this));
 
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).memoryCacheExtraOptions(480, 800) // default
+																														// =
+																														// device
+																														// screen
+																														// dimensions
+				.threadPoolSize(3) // default
+				.threadPriority(Thread.NORM_PRIORITY - 1) // default
+				.denyCacheImageMultipleSizesInMemory().memoryCache(new LruMemoryCache(5 * 1024 * 1024))
+				.memoryCacheSize(2 * 1024 * 1024).memoryCacheSizePercentage(13) // default
+				.imageDownloader(new BaseImageDownloader(this)) // default
+				.defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+				.writeDebugLogs().discCache(new UnlimitedDiskCache(getDiskCacheDir(this, "b")))
+				.discCacheSize(100 * 1024 * 1024).diskCacheFileNameGenerator(new Md5FileNameGenerator()).build();
+		imageloader.init(config);
+		// listmethod();
+		recyclemethod();
+
+	}
+
+	@SuppressWarnings("deprecation")
+	private void recyclemethod() {
+		StaggeredGridLayoutManager layout1 = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+		recyclerView.setAdapter(new myRecycleAdapter(this));
+		recyclerView.setLayoutManager(new LinearLayoutManager(this));
+		recyclerView.setAdapter(new LztRecycleViewAdapter<vh1, String>(this, list) {
+
+			@Override
+			public vh1 createVh(View v) {
+				return new vh1(v);
+			}
+
+			@Override
+			public void BindVh(vh1 vh, int pos) {
+				// Log.e("sb", f1+"s");
+
+				final ImageView imageView = vh.imageView;
+				imageView.setTag(list.get(pos));
+				imageloader.loadImage(list.get(pos), new ImageLoadingListener() {
+
+					@Override
+					public void onLoadingStarted(String arg0, View arg1) {
+						imageView.setImageResource(R.drawable.ic_launcher);
+					}
+
+					@Override
+					public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+						imageView.setImageResource(R.drawable.ofm_add_icon);
+					}
+
+					@Override
+					public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+						if (imageView.getTag() == arg0)
+							imageView.setImageBitmap(arg2);
+					}
+
+					@Override
+					public void onLoadingCancelled(String arg0, View arg1) {
+						imageView.setImageResource(R.drawable.ofm_camera_icon);
+					}
+				});
+			}
+
+		});
+	}
+
+	private void listmethod() {
 		adapter = new MyBaseAdapter<String>(this, list, R.layout.volleyimageview) {
 
 			@Override
 			public void convert(ViewHolder vh, String t, int position) {
 				vh.setText(R.id.textview, "image" + position);
-				ImageView imageView = vh.getView(R.id.imageview);
+				final ImageView imageView = vh.getView(R.id.imageview);
 				imageView.setTag(t);// 设置图片标识 辅助处理图片错位
-				ImageListener listener = getImageListener(imageView, R.drawable.ic_launcher, R.drawable.ic_launcher, t);
-				mImageLoader.get(t, listener);// 设置监听 图片错位在这处理
+				// ImageListener listener = getImageListener(imageView,
+				// R.drawable.ic_launcher, R.drawable.ic_launcher, t);
+				// mImageLoader.get(t, listener);// 设置监听 图片错位在这处理
+				// if(imageView.getTag()==arg0)//解决图片错位
+				DisplayImageOptions options = new DisplayImageOptions.Builder()
+						.showImageOnLoading(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher)
+						.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+				imageloader.displayImage(t, imageView, options);
 
 			}
 		};
 		lv.setAdapter(adapter);
+		lv.setOnScrollListener(new PauseOnScrollListener(imageloader, true, true));
 
 		lv.setOnItemDeleteListener(new onItemDeletedListener() {
 
@@ -99,11 +199,72 @@ public class VolleyLoadImage extends Activity {
 				adapter.notifyDataSetChanged();
 			}
 		});
+	}
+
+	class vh1 extends RecyclerView.ViewHolder {
+		@Bind(R.id.textview)
+		TextView textView;
+		@Bind(R.id.imageview)
+		ImageView imageView;
+
+		public vh1(View itemView) {
+			super(itemView);
+			ButterKnife.bind(this, itemView);
+		}
 
 	}
 
-	private void initView() {
-		lv = (MyListview) findViewById(R.id.lv);
+	class myRecycleAdapter extends RecyclerView.Adapter<myRecycleAdapter.vh> {
+		private Context context;
+
+		public myRecycleAdapter(Context context) {
+			this.context = context;
+		}
+
+		@Override
+		public int getItemCount() {
+			return list.size();
+		}
+
+		@Override
+		public void onBindViewHolder(vh vh, int pos) {
+			final ImageView imageView = vh.imageView;
+			// imageView.setTag(list.get(pos));
+			ImageListener listener = getImageListener(imageView, R.drawable.ic_launcher, R.drawable.ic_launcher,
+					list.get(pos));
+			mImageLoader.get(list.get(pos), new ImageListener() {
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onResponse(ImageContainer response, boolean isImmediate) {
+					imageView.setImageBitmap(response.getBitmap());
+				}
+			});// 设置监听 图片错位在这处理
+		}
+
+		@Override
+		public vh onCreateViewHolder(ViewGroup arg0, int arg1) {
+			vh vh = new vh(LayoutInflater.from(context).inflate(R.layout.volleyimageview, null, false));
+			return vh;
+		}
+
+		class vh extends RecyclerView.ViewHolder {
+			@Bind(R.id.textview)
+			TextView textView;
+			@Bind(R.id.imageview)
+			ImageView imageView;
+
+			public vh(View itemView) {
+				super(itemView);
+				ButterKnife.bind(this, itemView);
+			}
+
+		}
 	}
 
 	private void setData() {
@@ -254,6 +415,37 @@ public class VolleyLoadImage extends Activity {
 		};
 	}
 
+	public ImageListener getImageListener1(final ImageView view, final int defaultImageResId, final int errorImageResId,
+			final String url) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				if (errorImageResId != 0) {
+					view.setImageResource(errorImageResId);
+				}
+			}
+
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					// 在这里可以设置，如果想得到圆角图片的画，可以对bitmap进行加工，可以给imageview加一个
+					// 额外的参数
+					String urlTag = (String) view.getTag();
+					if (urlTag != null && urlTag.trim().equals(url) && !f1) {
+						resizeBitmap(response.getBitmap());
+						view.setImageBitmap(response.getBitmap());
+					}
+				} else if (defaultImageResId != 0) {
+					view.setImageResource(defaultImageResId);
+				}
+			}
+
+			private void resizeBitmap(Bitmap bitmap) {
+
+			}
+		};
+	}
+
 	class BitmapCache implements ImageCache {
 		/**
 		 * 缓存 最大
@@ -263,7 +455,7 @@ public class VolleyLoadImage extends Activity {
 		int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 8);
 
 		public BitmapCache() {
-			lruCache = new LruCache<String, Bitmap>(5 * 102 * 1024) {
+			lruCache = new LruCache<String, Bitmap>(5 * 1024 * 1024) {
 				@Override
 				protected int sizeOf(String key, Bitmap value) {
 					// 重写此方法来衡量每张图片的大小，默认返回图片数量。
@@ -282,12 +474,12 @@ public class VolleyLoadImage extends Activity {
 		@Override
 		public Bitmap getBitmap(String url) {
 			if (lruCache.get(url) != null) {
-				Log.e("sb", "从LruCahce获取");
+				// Log.e("sb", "从LruCahce获取");
 				return lruCache.get(url);
 
 			} else {
 				String key = mD5Utils.md5(url);
-				Log.e("sb", "从disklruCahce获取");
+				// Log.e("sb", "从disklruCahce获取");
 				try {
 
 					if (diskLruCache.get(key) != null) {
@@ -313,7 +505,7 @@ public class VolleyLoadImage extends Activity {
 		public void putBitmap(String url, Bitmap bitmap) {
 			lruCache.put(url, bitmap);
 			String key = mD5Utils.md5(url);
-			Log.e("ab", key);
+			// Log.e("ab", key);
 			try {
 				if (diskLruCache.get(key) == null) {
 					DiskLruCache.Editor editor = diskLruCache.edit(key);
@@ -321,7 +513,7 @@ public class VolleyLoadImage extends Activity {
 						OutputStream outputStream = editor.newOutputStream(0);
 						if (bitmap.compress(CompressFormat.JPEG, 100, outputStream)) {
 							editor.commit();
-							Log.e("sb", "save to disk success");
+							// Log.e("sb", "save to disk success");
 						} else {
 							editor.abort();
 						}
