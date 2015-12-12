@@ -19,5 +19,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_cloud">CloudActivity</string>
     <string name="title_activity_recycleview">RecycleviewActivity</string>
+    <string name="title_activity_select">Select</string>
 
 </resources>

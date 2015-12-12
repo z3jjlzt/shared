@@ -1,10 +1,14 @@
-package com.example.shared;
+package com.z3jjlzt.demo;
 
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.example.shared.LeiDa;
+import com.example.shared.R;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 import com.example.shared.utils.EventInject;
 import com.example.shared.utils.LztViewInject;
 import com.example.shared.utils.ViewInjectUtils;

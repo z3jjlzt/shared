@@ -1,88 +1,47 @@
-package com.example.shared;
+package com.z3jjlzt.demo;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.example.shared.utils.LztRecycleViewAdapter;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.Volley;
+import com.example.shared.R;
+import com.example.shared.R.drawable;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
+import com.example.shared.utils.LztViewInject;
+import com.example.shared.utils.MyListview;
+import com.example.shared.utils.MyListview.OnReflashListener;
+import com.example.shared.utils.MyListview.onItemDeletedListener;
+import com.example.shared.utils.ViewInjectUtils;
+import com.z3jjlzt.utils.MyBaseAdapter;
+import com.z3jjlzt.utils.ViewHolder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.util.LruCache;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
-/**
- * @author z3jjlzt
- *2015年12月6日
- *imageloader使用
- */
-public class RecycleviewActivity extends Activity {
-	@Bind(R.id.list)
-	RecyclerView recycleView;
+public class MainActivity extends Activity {
 
+	@LztViewInject(R.id.lv)
+	private MyListview lv;
 	ArrayList<String> list;
-
-	ImageLoader imageLoader;
-	ImageLoaderConfiguration config;
-	DisplayImageOptions options;// 设置
+	private MyBaseAdapter adapter;
+	private BitmapCache bitmapCache;
+	private ImageLoader mImageLoader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_recycleview);
-		ButterKnife.bind(this);
-		setData();
-		todo();
-	}
-
-	private void todo() {
-		imageLoader = ImageLoader.getInstance();
-		options = new DisplayImageOptions.Builder().resetViewBeforeLoading(true)
-				.showImageOnLoading(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher).cacheInMemory(true)
-				.cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
-		config = new ImageLoaderConfiguration.Builder(this).memoryCacheExtraOptions(480, 800).threadPoolSize(3)// 线程池内加载的数量
-				.threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
-				.memoryCache(new UsingFreqLimitedMemoryCache(5 * 1024 * 1024)).memoryCacheSize(5 * 1024 * 1024)
-				.discCacheSize(50 * 1024 * 1024).discCacheFileNameGenerator(new Md5FileNameGenerator())// 将保存的时候的URI名称用MD5
-																										// 加密
-				.defaultDisplayImageOptions(options).discCacheFileCount(100) // 缓存的文件数量
-				.discCache(new UnlimitedDiskCache(getDiskCacheDir(this, "sb")))// 自定义缓存路径
-				.build();// 开始构建
-
-		imageLoader.init(config);
-
-		recycleView.setLayoutManager(new LinearLayoutManager(this));
-		recycleView.setAdapter(new LztRecycleViewAdapter<Vh, String>(this, list) {
-
-			@Override
-			public Vh createVh(View v) {
-				return new Vh(v);
-			}
-
-			@Override
-			public void BindVh(Vh viewholder, int position) {
-				final ImageView iv = viewholder.imageView;
-
-				imageLoader.displayImage(list.get(position), iv);
-			}
-		});
-
-	}
-
-	private void setData() {
+		setContentView(R.layout.activity_main);
+		ViewInjectUtils.inject(this);
 		list = new ArrayList<String>();
 		String[] images = new String[] { "http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
 				"http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg",
@@ -171,6 +130,7 @@ public class RecycleviewActivity extends Activity {
 				"http://img.my.csdn.net/uploads/201407/26/1406382765_7341.jpg" };
 
 		for (int i = 0; i < 4; i++) {
+			// list.add(images[i]);
 			list.add(
 					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fimg2.kwcdn.kuwo.cn%2Fstar%2FKuwoArtPic%2F2013%2F22%2F1396932137246_w.jpg&thumburl=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D4064024103%2C65869690%26fm%3D21%26gp%3D0.jpg");
 			list.add(
@@ -184,32 +144,116 @@ public class RecycleviewActivity extends Activity {
 			list.add(
 					"http://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg&thumburl=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fh%253D200%2Fsign%3Dc57dfee5344e251ffdf7e3f89787c9c2%2F72f082025aafa40fcfb29202af64034f79f019fc.jpg");
 		}
-		for (int i = 0; i < images.length; i++) {
-			list.add(images[i]);
-		}
+		bitmapCache = new BitmapCache();
+		mImageLoader = new ImageLoader(Volley.newRequestQueue(this), bitmapCache);
+		adapter = new MyBaseAdapter<String>(this, list, R.layout.volleyimageview) {
+
+			@Override
+			public void convert(ViewHolder vh, String t, int position) {
+				vh.setText(R.id.textview, "aaa" + position);
+				ImageView networkImageView = vh.getView(R.id.imageview);
+				networkImageView.setTag(t);
+				ImageListener listerer = ImageLoader.getImageListener(networkImageView, R.drawable.ic_launcher,
+						R.drawable.ic_launcher);
+				mImageLoader.get(t,
+						getImageListener(networkImageView, R.drawable.ic_launcher, R.drawable.ic_launcher, t));
+			}
+		};
+		lv.setAdapter(adapter);
+		lv.setOnItemDeleteListener(new onItemDeletedListener() {
+
+			@Override
+			public void onItemDelete(int pos) {
+				list.remove(pos);
+				adapter.notifyDataSetChanged();
+			}
+		});
+		lv.setOnRefreshListener(new OnReflashListener() {
+
+			@Override
+			public void OnReflash() {
+				new AsyncTask<String, Integer, String>() {
+
+					@Override
+					protected String doInBackground(String... params) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(String result) {
+						lv.onReflashCompleted();
+						Log.e("sb", "done");
+						super.onPostExecute(result);
+					}
+				}.execute();
+			}
+		});
+
 	}
 
-	private File getDiskCacheDir(Context context, String name) {
-		String cachePath;
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-				|| !Environment.isExternalStorageRemovable()) {
-			cachePath = context.getExternalCacheDir().getPath();
-		} else {
-			cachePath = context.getExternalCacheDir().getPath();
+	/**
+	 * 避免图片错位
+	 * 
+	 * @param view
+	 * @param defaultImageResId
+	 * @param errorImageResId
+	 * @param url
+	 * @return
+	 */
+	public static ImageListener getImageListener(final ImageView view, final int defaultImageResId,
+			final int errorImageResId, final String url) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				if (errorImageResId != 0) {
+					view.setImageResource(errorImageResId);
+				}
+			}
 
-		}
-		Log.e("sb", cachePath);
-		return new File(cachePath + File.separator + name);
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					// 在这里可以设置，如果想得到圆角图片的画，可以对bitmap进行加工，可以给imageview加一个
+					// 额外的参数
+					String urlTag = (String) view.getTag();
+					if (urlTag != null && urlTag.trim().equals(url)) {
+						view.setImageBitmap(response.getBitmap());
+					}
+				} else if (defaultImageResId != 0) {
+					view.setImageResource(defaultImageResId);
+				}
+			}
+		};
 	}
 
-	class Vh extends RecyclerView.ViewHolder {
-		@Bind(R.id.imageview)
-		ImageView imageView;
+	class BitmapCache implements ImageCache {
+		private LruCache<String, Bitmap> lruCache;
 
-		public Vh(View itemView) {
-			super(itemView);
-			ButterKnife.bind(this, itemView);
+		public BitmapCache() {
+			lruCache = new LruCache<String, Bitmap>(10 * 1024 * 1024) {
+				@Override
+				protected int sizeOf(String key, Bitmap value) {
+					return value.getRowBytes() * value.getHeight();
+				}
+			};
+		}
+
+		@Override
+		public Bitmap getBitmap(String url) {
+			return lruCache.get(url);
+		}
+
+		@Override
+		public void putBitmap(String url, Bitmap bitmap) {
+			lruCache.put(url, bitmap);
 		}
 
 	}
+
 }

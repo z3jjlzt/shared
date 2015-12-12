@@ -21,7 +21,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="RecycleviewActivity"
+            android:name="com.z3jjlzt.demo.Select"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
- 
+        <activity android:name="com.z3jjlzt.demo.CloudActivity" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.LeiDaActivity" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.MainActivity" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.RecycleviewActivity" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.ScaleImage" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.SlideActivity" >
+        </activity>
+        <activity android:name="com.z3jjlzt.demo.VolleyLoadImage" >
+        </activity>
     </application>
 
 </manifest>

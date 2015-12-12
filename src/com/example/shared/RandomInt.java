@@ -13,6 +13,11 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
+/**
+ * @author z3jjlzt
+ * 自定义view
+ *2015年12月12日
+ */
 public class RandomInt extends View {
 	private int mBgColor;
 	private String mInt;

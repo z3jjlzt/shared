@@ -1,4 +1,4 @@
-package com.example.shared.volley;
+package com.z3jjlzt.demo;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,8 @@ import com.example.shared.R;
 import com.example.shared.utils.LztRecycleViewAdapter;
 import com.example.shared.utils.MyListview;
 import com.example.shared.utils.MyListview.onItemDeletedListener;
+import com.example.shared.volley.DiskLruCache;
+import com.example.shared.volley.DiskLruCache.Editor;
 import com.example.shared.volley.DiskLruCache.Snapshot;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -43,11 +45,14 @@ import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.RecyclerListener;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -98,7 +103,7 @@ public class VolleyLoadImage extends Activity {
 		ButterKnife.bind(this);
 		setData();
 		bitmapCache = new BitmapCache();
-		
+
 		mImageLoader = new ImageLoader(Volley.newRequestQueue(this), bitmapCache);
 		imageloader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
 		// imageloader.init(ImageLoaderConfiguration.createDefault(this));
@@ -127,6 +132,7 @@ public class VolleyLoadImage extends Activity {
 		StaggeredGridLayoutManager layout1 = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
 		recyclerView.setAdapter(new myRecycleAdapter(this));
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
+		// recyclerView.setOnScrollListener(listener);
 		recyclerView.setAdapter(new LztRecycleViewAdapter<vh1, String>(this, list) {
 
 			@Override

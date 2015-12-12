@@ -1,8 +1,12 @@
-package com.example.shared;
+package com.z3jjlzt.demo;
 
 import java.util.ArrayList;
 
+import com.example.shared.CloudText;
+import com.example.shared.R;
 import com.example.shared.CloudText.itemClickListener;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;

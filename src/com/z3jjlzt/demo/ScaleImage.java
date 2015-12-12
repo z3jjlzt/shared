@@ -1,5 +1,9 @@
-package com.example.shared;
+package com.z3jjlzt.demo;
 
+import com.example.shared.R;
+import com.example.shared.R.drawable;
+import com.example.shared.R.id;
+import com.example.shared.R.layout;
 import com.example.shared.utils.EventInject;
 import com.example.shared.utils.LztViewInject;
 import com.example.shared.utils.ViewInjectUtils;
